@@ -1,47 +1,91 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { RouterLink, RouterView } from 'vue-router'
+
 </script>
 
+
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
+    <body>
+        <nav class="logo">
+            <RouterLink to="/gate"><img src="./assets/空屋 logo-2.png" alt="雲端空屋RENT"></RouterLink>
+        </nav>
+        <ul>
+            <li>
+                <RouterLink style="text-decoration: none; color: inherit;" to="/gate">gate | 大門</RouterLink>
+            </li>
+            <li>
+                <RouterLink style="text-decoration: none; color: inherit;" to="/livingroom">livingroom | 客廳
+                </RouterLink>
+            </li>
+            <li>
+                <RouterLink style="text-decoration: none; color: inherit;" to="/kitchen">Kitchen | 廚房</RouterLink>
+            </li>
+            <li>
+                <RouterLink style="text-decoration: none; color: inherit;" to="/terrace">Terrace =/= 頂樓加蓋</RouterLink>
+            </li>
+            <li>
+                <RouterLink style="text-decoration: none; color: inherit;" to="/construction">Construction =/= 施工中
+                </RouterLink>
+            </li>
+        </ul>
+    </body>
 
-  <main>
-    <TheWelcome />
-  </main>
+    <RouterView />
+
+    <footer>Hey It's our lovely rent house for something fun here.</footer>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
+nav {
+    display: ruby-text;
+    background-color: #699B9F;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+img {
+    height: 60px;
+    margin: 20px auto 15px auto;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+ul {
+    margin: 0;
+    list-style: none;
+    padding: 30px 20px 100% 25px;
+    float: left;
+    display: flow-root;
+    background-color: #F3AE3F;
+    font-family: monospace;
 }
+
+li {
+    margin: 10px
+}
+
+footer {
+    display: grid;
+    background-color: #333333;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    color: aliceblue;
+    font-family: monospace;
+    font-size: medium;
+}
+
+@media screen and (max-width: 700px) {
+    ul {
+        float: none;
+        display: flex;
+        width: 100%;
+        padding: 15px 0 15px 25px;
+    }
+
+    li {
+        display: flex;
+        margin: auto 5px;
+        border-right: dotted;
+    }
+}
+
+ul a.router-link-exact-active {}
 </style>
