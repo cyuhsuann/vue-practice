@@ -21,13 +21,6 @@ import { RouterLink, RouterView } from 'vue-router'
             <li>
                 <RouterLink style="text-decoration: none; color: inherit;" to="/kitchen">Kitchen | 廚房</RouterLink>
             </li>
-            <li>
-                <RouterLink style="text-decoration: none; color: inherit;" to="/terrace">Terrace =/= 頂樓加蓋</RouterLink>
-            </li>
-            <li>
-                <RouterLink style="text-decoration: none; color: inherit;" to="/construction">Construction =/= 施工中
-                </RouterLink>
-            </li>
         </ul>
     </body>
 

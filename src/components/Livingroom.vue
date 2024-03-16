@@ -27,18 +27,7 @@ const gallerys = reactive({
         { name: "澡澤", img: Image06, price: 3500 },
         { name: "清晨繁星", img: Image07, price: 2500 },
         { name: "澡澤", img: Image08, price: 3500 },
-        { name: "清晨繁星", img: Image09, price: 2500 },
-        { name: "澡澤", img: Image010, price: 3500 },
-        { name: "清晨繁星", img: Image011, price: 2500 },
-        { name: "清晨繁星", img: Image01, price: 2500 },
-        { name: "澡澤", img: Image03, price: 3500 },
-        { name: "清晨繁星", img: Image04, price: 2500 },
-        { name: "澡澤", img: Image06, price: 3500 },
-        { name: "清晨繁星", img: Image07, price: 2500 },
-        { name: "澡澤", img: Image08, price: 3500 },
-        { name: "清晨繁星", img: Image09, price: 2500 },
-        { name: "澡澤", img: Image010, price: 3500 },
-        { name: "清晨繁星", img: Image011, price: 2500 },
+
     ],
     template: '<p></p>'
 })
@@ -60,7 +49,6 @@ const gallerys = reactive({
 
 <style scoped>
 .mainBody {
-    border-style: dotted;
     float: none;
     margin-left: 277px;
     height: 100%;
@@ -69,12 +57,6 @@ const gallerys = reactive({
 .galleryITEMS {
     margin: 30px;
 }
-
-/* .galleryIMG {
-    border-style: groove;
-    border-color: #ffffff;
-    border-width: 3px;
-} */
 
 @media screen and (max-width: 700px) {
     .mainBody {

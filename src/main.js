@@ -23,17 +23,6 @@ const router = createRouter({
             name: 'kitchen',
             component: () => import('./components/Kitchen.vue')
         },
-        {
-            path: '/terrace',
-            name: 'terrace',
-            component: () => import('./components/Terrace.vue')
-        },
-        {
-            path: '/construction',
-            name: 'construction',
-            component: () => import('./components/Construction.vue')
-        },
-
     ]
 });
 export default router
