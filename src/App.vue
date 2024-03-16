@@ -79,6 +79,4 @@ footer {
         border-right: dotted;
     }
 }
-
-ul a.router-link-exact-active {}
 </style>

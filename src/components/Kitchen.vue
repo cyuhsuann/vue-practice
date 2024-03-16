@@ -40,19 +40,6 @@ const todoList = reactive({
         }
     },
 
-    // toggleStrike: function (index) {
-    //     this.lists[index].striked = !this.lists[index].striked;
-
-    //     let lastOne = ''
-    //     if (this.lists[index].striked === true) {
-    //         lastOne = this.lists.splice(index, 1)
-    //         this.lists.push(lastOne[0])
-    //     } else {
-    //         lastOne = this.lists.splice(index, 1)
-    //         this.lists.unshift(lastOne[0])
-    //     }
-    // },
-
     toggleStrike: function (index) {
         this.lists[index].striked = !this.lists[index].striked;
 
@@ -65,11 +52,6 @@ const todoList = reactive({
             this.lists.unshift(lastOne[0])
         }
     },
-    // hideLIST: function () {
-    //     let hideList = []
-
-    // },
-
 })
 </script>
 
@@ -78,7 +60,6 @@ const todoList = reactive({
     <div class="mainBody">
         <div class="listForm">
             <h1>{{ todoList.title }} To Do List</h1>
-            <!-- <h4><input v-model="todoList.title" placeholder="This is for?"></h4> -->
             <div><input v-model="todoList.addlist" placeholder="add todo..."></input>
                 <button class="addBN" @click="todoList.addLIST"> + </button>
             </div>
@@ -88,23 +69,9 @@ const todoList = reactive({
                 {{ list.text }}
                 <button class="doneBN" @click="todoList.toggleStrike(index)">Done</button>
                 <button class="deleteBN" @click="todoList.removeLIST(index)">Delete</button>
-
-                <!-- {{ hideList.text }}
-                    <button @click="todoList.toggleStrike(index)">Done</button>
-                    <button @click="todoList.removeLIST(index)">Delete</button> -->
             </div>
         </div>
-        <!-- <div class=" test">
-                <h4>test</h4>
-                <ul>
-                    <li>{{ todoList.lists }}</li>
-                </ul>
-            </div> -->
-
-
     </div>
-
-
 </template>
 
 
@@ -121,7 +88,6 @@ const todoList = reactive({
     width: 60%;
     padding: 30px 30px 80px 30px;
     margin: 50px auto 0px auto;
-    /* background-color: #9162A6; */
     color: #333333;
     border-radius: 10px;
     border-style: solid;
