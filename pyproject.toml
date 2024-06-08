@@ -1,0 +1,18 @@
+[project]
+name = "todo_api"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "YuHsuan", email = "c.yuhsuann@gmail.com"},
+]
+dependencies = [
+    "fastapi>=0.110.2",
+    "uvicorn>=0.29.0",
+    "sqlmodel>=0.0.16",
+    "psycopg2-binary>=2.9.9",
+    "python-dotenv>=1.0.1",
+]
+requires-python = ">=3.10"
+readme = "README.md"
+license = {text = "MIT"}
+

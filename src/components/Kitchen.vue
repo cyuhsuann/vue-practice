@@ -59,7 +59,7 @@ const todoList = reactive({
 <template>
     <div class="mainBody">
         <div class="listForm">
-            <h1>{{ todoList.title }} To Do List</h1>
+            <h1>To Do List</h1>
             <div><input v-model="todoList.addlist" placeholder="add todo..."></input>
                 <button class="addBN" @click="todoList.addLIST"> + </button>
             </div>
@@ -149,11 +149,11 @@ h1 {
     width: 50%;
 }
 
-.test {
+/* .test {
     border-style: dotted;
     width: 50%;
     margin-top: 100px;
-}
+} */
 
 ul {
     list-style: none;

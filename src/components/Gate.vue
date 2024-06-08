@@ -98,20 +98,6 @@ const info = reactive({
                 <button v-on:click="send">:: SEND ::</button>
             </div>
         </div>
-
-
-        <!-- <div class=" result">
-            <h6>Test</h6>
-            Name: {{ info.fullName() }}
-            <br />
-            E-mail: {{ email }}
-            <br />
-            Phone: {{ phone }}
-            <br />
-            Gender: {{ gender }}
-            <br />
-            Birth: {{ info.fullBirth() }}
-        </div> -->
     </div>
 
 

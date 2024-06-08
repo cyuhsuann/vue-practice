@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 
 </script>
@@ -79,4 +79,4 @@ footer {
         border-right: dotted;
     }
 }
-</style>
+</style> -->
