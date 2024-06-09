@@ -164,6 +164,7 @@ button {
     border: 0;
     width: 60px;
     height: 30px;
+    margin-left: 10px;
     border-radius: 50%;
 }
 
@@ -172,6 +173,7 @@ button {
     border: 0;
     width: 60px;
     height: 30px;
+    margin-left: 10px;
     border-radius: 50%;
 }
 
