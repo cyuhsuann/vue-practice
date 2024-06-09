@@ -55,7 +55,7 @@ def create_todo():
 
 def main():
     create_db_and_tables()
-    create_todo()
+    # create_todo()
 
 
 if __name__ == "__main__":

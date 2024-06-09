@@ -3,6 +3,7 @@ from sqlmodel import Session, select
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
+from . import database
 from .database import TodoList, engine, create_db_and_tables
 
 
@@ -14,11 +15,7 @@ class TodoListUpdate(BaseModel):  # for PUT function
 app = FastAPI()
 
 
-origins = [
-    "http://localhost:5173",
-    # "http://localhost",
-    # "http://localhost:8000",
-]
+origins = ["http://localhost:5173"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -39,10 +36,18 @@ def get_session():  # way way important to show in front of browser!
 
 
 @app.get("/todolist", response_model=List[TodoList])
-def read_todolists(
-    session: Session = Depends(get_session),
-):  # then Depends can connect to the browser
-    todolists = session.exec(select(TodoList)).all()
+def read_todolists():
+    # remember this is the simple way to connect the database, but still can
+    # use Depends
+    with Session(engine) as sess:
+        todolists = sess.exec(select(TodoList)).all()
+    return todolists
+
+
+# defined in .database, or .todolist or something
+def get_todolist_items():
+    with Session(engine) as sess:
+        todolists = sess.exec(select(TodoList)).all()
     return todolists
 
 

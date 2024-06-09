@@ -42,6 +42,7 @@ export async function updateData(id, data) {
     return responseData;
 }
 
+
 export async function deleteData(id) {
     const response = await fetch(`${apiUrl}/todolist/${id}`, {
         method: 'DELETE',
