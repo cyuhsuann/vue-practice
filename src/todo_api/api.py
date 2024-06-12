@@ -26,11 +26,13 @@ app.add_middleware(
 )
 
 
-def lifespan(app: FastAPI):
-    create_db_and_tables()
+# Already had one in `database.py`
+# def lifespan(app: FastAPI):
+#     create_db_and_tables()
 
 
-def get_session():  # way way important to show in front of browser!
+# way way important to show in front of browser!
+def get_session():
     with Session(engine) as session:
         yield session
 

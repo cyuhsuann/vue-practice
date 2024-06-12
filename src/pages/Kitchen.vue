@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, reactive } from 'vue'
 
 const todoList = reactive({
@@ -7,19 +7,19 @@ const todoList = reactive({
     lists: [
         {
             text: 'Add',
-            striked: false,
+            isDone: false,
         },
         {
             text: 'Things',
-            striked: false,
+            isDone: true,
         },
         {
             text: 'haha',
-            striked: false,
+            isDone: false,
         },
         {
             text: 'youhere',
-            striked: false,
+            isDone: false,
         }
 
     ],
@@ -34,17 +34,17 @@ const todoList = reactive({
         } else {
             this.lists.push({
                 text: this.addlist,
-                striked: false,
+                isDone: false,
             });
             this.addlist = ''   /* let the block become empty again */
         }
     },
 
     toggleStrike: function (index) {
-        this.lists[index].striked = !this.lists[index].striked;
+        this.lists[index].isDone = !this.lists[index].isDone;
 
         let lastOne = ''
-        if (this.lists[index].striked === true) {
+        if (this.lists[index].isDone === true) {
             lastOne = this.lists.splice(index, 1)
             this.lists.push(lastOne[0])
         } else {
@@ -65,7 +65,7 @@ const todoList = reactive({
             </div>
 
             <div v-for="(list, index) in todoList.lists" :key="index"
-                :style="{ textDecoration: list.striked ? 'line-through' : 'none' }">
+                :style="{ textDecoration: list.isDone ? 'line-through' : 'none' }">
                 {{ list.text }}
                 <button class="doneBN" @click="todoList.toggleStrike(index)">Done</button>
                 <button class="deleteBN" @click="todoList.removeLIST(index)">Delete</button>

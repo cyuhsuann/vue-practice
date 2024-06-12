@@ -1,22 +1,38 @@
 const apiUrl = 'http://localhost:8000'
 
+// const express = require('express');
+// const app = express();
+// app.use(express.static('public'));
+
+const logRequest = (verb) => { console.log(`${verb} Request Received`) }
+
+// app.use((req, res, next) => { console.log(`${req.method} Request Received`); });
+
+// app.get('/todolist/', (req, res, next) => {
+//     const data = response.json()
+//     res.send(data);
+//     console.log('Response Sent');
+// });
+
+
+
 export async function fetchData() {
+    logRequest('GET')
     const response = await fetch(`${apiUrl}/todolist`, {
-        method: 'GET',  //implicitly recognise, don't need to write GET
         headers: { 'Content-Type': 'application/json' }
     });
-    console.log('It is from GET data.js')
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
-    const data = await response.json()  //connect to `api.py` GET
-    // console.log(data)  //output `api.py` GET
+    // // connect to `api.py` GET
+    const data = await response.json()
+    // console.log(data)  // // output `api.py` GET
     return data;
 }
 
 export async function postData(data) {
+    logRequest('POST')
     const response = await fetch(`${apiUrl}/todolist`, {
-        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
     });
@@ -24,13 +40,14 @@ export async function postData(data) {
         throw new Error('Network response was not ok');
     }
     const responseData = await response.json()
-    console.log('Fetched todos:', data); //don't know why should use DATA except 'response.data'
+    // TODO: don't know why should use DATA except 'response.data'
+    console.log('Fetched todos:', data);
     return responseData;
 }
 
 export async function updateData(id, data) {
+    logRequest('PUT')
     const response = await fetch(`${apiUrl}/todolist/${id}`, {
-        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
     });
@@ -44,8 +61,8 @@ export async function updateData(id, data) {
 
 
 export async function deleteData(id) {
+    logRequest('DELETE')
     const response = await fetch(`${apiUrl}/todolist/${id}`, {
-        method: 'DELETE',
         headers: { 'Content-Type': 'application/json' }
     });
     if (!response.ok) {
@@ -54,3 +71,4 @@ export async function deleteData(id) {
     console.log('Item deleted');
     return;
 }
+

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, reactive } from 'vue'
 import Image01 from '../assets/IMG_01.jpg'
 import Image03 from '../assets/IMG_03.jpg'
