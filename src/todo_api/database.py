@@ -49,13 +49,8 @@ def create_todo():
         session.commit()
 
 
-# if __name__ == "__main__":
-#     create_db_and_tables()
-
-
 def main():
     create_db_and_tables()
-    # create_todo()
 
 
 if __name__ == "__main__":

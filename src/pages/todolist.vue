@@ -1,92 +1,74 @@
-<script>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { fetchData, postData, updateData, deleteData } from '../todo_frontend/data';  //present to browser
 // import axios from 'axios';
 
 const apiUrl = 'http://localhost:8000';
 
-export default {
-    setup() {
-        const todos = ref([]);
-        const newTodo = ref('');
-        const newPrice = ref('');
-        const editingTodo = ref(null);
+const todos = ref([]);
+const newTodo = ref('');
+const newPrice = ref('');
+const editingTodo = ref(null);
 
-        const fetchTodos = async () => {
-            const data = await fetchData();
-            if (Array.isArray(data)) {
-                todos.value = data; // 確保這裡設置的是數組
-                console.log('Fetched todos:', data);  // chack the data thast we have gotten
-            } else {
-                console.error('Failed to fetch todos:', error);
-            }
-        };
-
-        const addTodo = async () => {
-            try {
-                const newTodoItem = await postData({ item: newTodo.value, price: newPrice.value });  //only can accept one object
-                todos.value.push({ item: newTodo.value, price: newPrice.value })  // todos.value.push(newTodoItem);
-                console.log('New item added:', newTodoItem)
-            } catch (error) {
-                console.error('Failed to add new todo:', error)
-            }
-            newTodo.value = '';
-            newPrice.value = '';
-        };
-
-        const updateTodo = async (id, updatedItem, updatedPrice) => {
-            try {
-                const updatedTodo = await updateData(id, { item: updatedItem, price: updatedPrice })
-                const index = todos.value.findIndex(todo => todo.id === id);
-                if (index !== -1) {
-                    todos.value[index] = updatedTodo;
-                }
-                console.log('Updated item:', updatedTodo);
-                editingTodo.value = null;  // Reset editing state
-
-            } catch (error) {
-                console.error('Failed to add new todo:', error)
-            }
-        };
-
-        const editTodo = (todo) => {
-            editingTodo.value = { ...todo };
-            // Create a copy of the todo item to edit
-            // spread syntax !
-        };
-
-        const cancelEdit = () => {
-            editingTodo.value = null; // Reset editing state
-        };
-
-
-        const deleteTodo = async (id) => {
-            try {
-                await deleteData(id);
-                await fetchTodos();  // Refresh the list
-            } catch (error) {
-                console.error('Failed to add new todo:', error)
-            }
-        }
-
-        onMounted(fetchTodos);  //= onMounted(() => { fetchTodos() });
-
-        return {
-            todos,
-            newTodo,
-            newPrice,
-            editingTodo,
-            fetchTodos,
-            addTodo,
-            updateTodo,
-            deleteTodo,
-            editTodo,
-            cancelEdit,
-        }
-
-
+const fetchTodos = async () => {
+    const data = await fetchData();
+    if (Array.isArray(data)) {
+        todos.value = data; // 確保這裡設置的是數組
+        console.log('Fetched todos:', data);  // chack the data thast we have gotten
+    } else {
+        console.error('Failed to fetch todos:', error);
     }
 };
+
+const addTodo = async () => {
+    try {
+        const newTodoItem = await postData({ item: newTodo.value, price: newPrice.value });  //only can accept one object
+        todos.value.push({ item: newTodo.value, price: newPrice.value })  // todos.value.push(newTodoItem);
+        console.log('New item added:', newTodoItem)
+    } catch (error) {
+        console.error('Failed to add new todo:', error)
+    }
+    newTodo.value = '';
+    newPrice.value = '';
+};
+
+const updateTodo = async (id, updatedItem, updatedPrice) => {
+    try {
+        const updatedTodo = await updateData(id, { item: updatedItem, price: updatedPrice })
+        const index = todos.value.findIndex(todo => todo.id === id);
+        if (index !== -1) {
+            todos.value[index] = updatedTodo;
+        }
+        console.log('Updated item:', updatedTodo);
+        editingTodo.value = null;  // Reset editing state
+
+    } catch (error) {
+        console.error('Failed to add new todo:', error)
+    }
+};
+
+const editTodo = (todo) => {
+    editingTodo.value = { ...todo };
+    // Create a copy of the todo item to edit
+    // spread syntax !
+};
+
+const cancelEdit = () => {
+    editingTodo.value = null; // Reset editing state
+};
+
+
+const deleteTodo = async (id) => {
+    try {
+        await deleteData(id);
+        await fetchTodos();  // Refresh the list
+    } catch (error) {
+        console.error('Failed to add new todo:', error)
+    }
+}
+
+onMounted(fetchTodos);  //= onMounted(() => { fetchTodos() });
+
 </script>
 
 <template>
@@ -202,7 +184,7 @@ button {
 
 ul {
     list-style: none;
-    /* border-bottom-style: dotted; */
+    border-bottom-style: dotted;
 
 }
 </style>

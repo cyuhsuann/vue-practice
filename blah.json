@@ -1,0 +1,28 @@
+{
+    "data": [
+        {
+            "id": "1",
+            "type": "todo_list_item",
+            "attributes": {
+                "id": 1,
+                "item": "cookies"
+            },
+            "metadata": {},
+            "relationships": []
+        },
+        {
+            "id": "2",
+            "type": "todo_list_item",
+            "attributes": {
+                "id": 2,
+                "item": "ice cream"
+            }
+        }
+    ],
+    "errors": [],
+    "metadata": {
+        "request_time": "time",
+        "request_id": "123456",
+        "version": 2
+    }
+}

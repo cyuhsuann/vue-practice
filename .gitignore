@@ -29,7 +29,9 @@ coverage
 
 *.tsbuildinfo
 
+# important
 .env
 
+# important
 __pycache__
 *.egg-info
