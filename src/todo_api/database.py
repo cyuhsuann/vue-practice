@@ -9,7 +9,8 @@ load_dotenv()
 class TodoList(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)  # (default=None, alias="id")
     item: str
-    price: int | None = None
+    price: int
+    is_done: bool | None = Field(default=True)
 
 
 ### Connecting postgresql with sqlalchemy
@@ -36,17 +37,17 @@ def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
 
 
-def create_todo():
-    todo_1 = TodoList(item="pesto", price=10)
-    todo_2 = TodoList(item="spaghetti", price=15)
-    todo_3 = TodoList(item="broccoli", price=7)
+# def create_todo():
+#     # todo_1 = TodoList(item="pesto", price=10, is_done=False)
+#     # todo_2 = TodoList(item="spaghetti", price=15, is_done=True)
+#     # todo_3 = TodoList(item="broccoli", price=7, is_done=False)
 
-    with Session(engine) as session:
-        session.add(todo_1)
-        session.add(todo_2)
-        session.add(todo_3)
+#     with Session(engine) as session:
+#         # session.add(todo_1)
+#         # session.add(todo_2)
+#         # session.add(todo_3)
 
-        session.commit()
+#         session.commit()
 
 
 def main():
