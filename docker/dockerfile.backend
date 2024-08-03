@@ -1,0 +1,23 @@
+FROM ubuntu:22.04
+
+RUN apt-get update
+RUN apt-get install -y python3 python3-venv python3-pip
+
+ENV PIP_ROOT_USER_ACTION=ignore
+RUN pip install pdm
+
+WORKDIR /app
+
+COPY pyproject.toml pdm.lock alembic.ini ./
+RUN pdm install --no-self
+
+# COPY requirements.txt ./
+# RUN requirements.txt
+
+COPY ./migration ./migration
+COPY ./src/todo_api ./src/todo_api 
+RUN pdm install
+
+# vue-experiment-3.10changxuan@SIANs-MAC vue-experiment % docker run -it my-fastapi-tool /bin/bash
+# root@2022c5eff95a:/app#
+# root@2022c5eff95a:/app/src# pdm run uvicorn todo_api:app --host 0.0.0.0 --port 8080

@@ -35,3 +35,4 @@ coverage
 # important
 __pycache__
 *.egg-info
+.venv

@@ -1,58 +1,62 @@
-import os
-from sqlmodel import Field, Session, SQLModel, create_engine
-from dotenv import load_dotenv
+import os, typing
+from sqlmodel import Field, SQLModel
 
 
-load_dotenv()
-
-
+## TODO:
 class TodoList(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)  # (default=None, alias="id")
+    id: int | None = Field(default=None, primary_key=True)
     item: str
     price: int
-    is_done: bool | None = Field(default=True)
+    is_done: bool | None = Field(default=None)
 
 
-### Connecting postgresql with sqlalchemy
+class DBConn:
+    username: typing.Optional[str] = None
+    password: typing.Optional[str] = None
+    db_name: typing.Optional[str] = None
+    db_host: typing.Optional[str] = None
+    db_port: typing.Optional[int] = None
 
-sqlite_file_name = "database.db"
-# sqlite_url = f"sqlite://{sqlite_file_name}"  不適用
-username = os.environ["DB_USER"]
-password = os.environ["DB_PASSWORD"]
-db_name = os.environ["DB_DATABASE"]
-db_host = os.environ["DB_HOST"]
-db_port = os.environ["DB_PORT"]
-db_address = (
-    f"postgresql+psycopg2://{username}:{password}@{db_host}:{db_port}/{db_name}"
-)
+    is_initialised = False
+
+    @classmethod
+    def build_address(cls):
+        if not cls.is_initialised:
+            raise ValueError(
+                "DBConn class needs to load envs before it can generate addresses"
+            )
+        userpass = f"{cls.username}:{cls.password}"
+        db_addr = f"{cls.db_host}:{cls.db_port}"
+        return f"postgresql+psycopg2://{userpass}@{db_addr}/{cls.db_name}"
+
+    @classmethod
+    def load_envs(cls):
+        var_env_pairs = [
+            ("username", "DB_USER"),
+            ("password", "DB_PASSWORD"),
+            ("db_name", "DB_DATABASE"),
+            ("db_host", "DB_HOST"),
+            ("db_port", "DB_PORT"),
+        ]
+
+        errors = []
+        for var, env in var_env_pairs:
+            # set attribute
+            setattr(cls, var, os.getenv(env))
+            # get attribute
+            if getattr(cls, var) is None:
+                errors.append(env)
+
+        if len(errors) > 0:
+            msg = "\n  ".join(errors)
+            raise ValueError(f"DB connection env vars missing:\n{msg}")
+
+        cls.is_initialised = True
 
 
-engine = create_engine(
-    db_address,
-    echo=True,
-)
-
-
-def create_db_and_tables():
-    SQLModel.metadata.create_all(engine)
-
-
-# def create_todo():
-#     # todo_1 = TodoList(item="pesto", price=10, is_done=False)
-#     # todo_2 = TodoList(item="spaghetti", price=15, is_done=True)
-#     # todo_3 = TodoList(item="broccoli", price=7, is_done=False)
-
-#     with Session(engine) as session:
-#         # session.add(todo_1)
-#         # session.add(todo_2)
-#         # session.add(todo_3)
-
-#         session.commit()
-
-
-def main():
-    create_db_and_tables()
-
-
-if __name__ == "__main__":
-    main()
+## TODO: why do I use 'engine' for???
+def setup_database():
+    # Set up the database URL
+    DBConn.load_envs()
+    # Build the database URL
+    return DBConn.build_address()

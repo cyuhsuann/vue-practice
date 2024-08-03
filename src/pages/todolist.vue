@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 
-//present to browser
+// // present to browser
 import { fetchData, postData, deleteData, updateData } from '../todo_frontend/data';
 
-// Define the TodoItem type
+// // define the TodoItem type
 type TodoItem = {
     id: number;
     item: string;
@@ -19,26 +19,44 @@ const newPrice = ref<string | number>('');
 const editingTodo = ref<TodoItem | null>(null);
 const doneTodos = ref<TodoItem[]>([]);
 
+const sortTodos = () => {
+    todos.value.sort((a, b) => {
+        return a.id - b.id
+    });
+
+    doneTodos.value.sort((a, b) => {
+        return b.id - a.id
+    });
+};
+
 const fetchTodos = async () => {
     const data = await fetchData();
     if (Array.isArray(data)) {
-        todos.value = data as TodoItem[];  // 確保這裡設置的是數組
+        const sortTodos = TrueOrFalse(data)
+        todos.value = sortTodos.notDoneItem as TodoItem[];
+        doneTodos.value = sortTodos.doneItem as TodoItem[];
+        // console.log('FROM VUE GET', todos.value, doneTodos.value)
         console.log('Fetched todos:', data);  // chack the data thast we have gotten
     } else {
         console.error('Failed to fetch todos:', error);
     }
+    sortTodos();
 };
 
 const addTodo = async () => {
     try {
-        newItem = {
+        const newItem: TodoItem = {
             //only can accept one object
-            item: newTodo.value, price: newPrice.value, isdone: false
+            item: newTodo.value,
+            price: newPrice.value,
+            isdone: false
         }
         const newTodoItem = await postData(newItem);
-        // todos.value.push(newTodoItem);
         todos.value.push(newItem)
-        console.log('New item added:', newTodoItem)
+        // //
+        sortTodos();
+        await fetchTodos()
+        console.log('Added new todo:', newItem)
     } catch (error) {
         console.error('Failed to add new todo:', error)
     }
@@ -50,36 +68,39 @@ const deleteTodo = async (id: number) => {
     try {
         await deleteData(id);
         await fetchTodos();  // Refresh the list
+        console.log('Deleted todo:', id)
     } catch (error) {
         console.error('Failed to delete item:', error)
     }
 }
 
 const updateTodo = async (
-    id: number, updatedItem: string, updatedPrice: number, isdone: boolean
-) => {
-    const item = { id, item: updatedItem, price: updatedPrice, isdone }
-    console.log(item)
+    id: number, updatedItem: string, updatedPrice: number, isDone: boolean
+): Promise<void> => {
+
+    const item = { id, item: updatedItem, price: updatedPrice, isdone: isDone }
+    console.log('Fetch the update item:', item)
+
     try {
-        const updatedTodo = await updateData(
-            id,
-            item
-        )
+        const updatedTodo = await updateData(id, item)
         const index = todos.value.findIndex((todo) => todo.id === id);
-        if (index !== -1 && isdone === false) {
-            todos.value[index] = updatedTodo;
+        if (index !== -1) {
+            // todos.value[index] = updatedTodo;
+            todos.value.splice(index, 1); // Remove from Not Done
+            doneTodos.value.unshift(updatedTodo); // Add to Done at the beginning
         }
-        console.log('Updated item:', updatedTodo);
+
         editingTodo.value = null;  // Reset editing state
-        console.log("*******  ", todos.value)
+        // await fetchTodos()
+        console.log('Updated todo:', updatedTodo, todos.valueo);
 
     } catch (error) {
         console.error('Failed to update new todo:', error)
     }
+    sortTodos();
 };
 
 const editTodo = (todo: TodoItem) => {
-    console.log('*******', todo)
     editingTodo.value = { ...todo };
     // Create a copy of the todo item to edit
     // spread syntax !
@@ -89,21 +110,30 @@ const cancelEdit = () => {
     editingTodo.value = null; // Reset editing state
 };
 
-// const isDoneItem = async (todo: TodoItem) => {
-//     try {
-//         const updateTodo = await updateData(todo.id, { ...todo, isdone: !todo.isdone });
-//         const index = todos.value.findIndex((tdex) => tdex.id === todo.id);
-//         if (index !== -1) {
-//             todos.value[index] = updatedTodo;
-//         }
-//         console.log('isDone item:', updatedTodo)
-//     } catch (error) {
-//         console.error('Failed to isDone item:', error)
-//     }
-// }
+const isDoneItem = async (todo: TodoItem) => {
+    try {
+        // // switch/ toggle the isdone status
+        const updatedItem = { ...todo, isdone: !todo.isdone };
+        const updatedTodo = await updateData(todo.id, updatedItem);
+        const index = todos.value.findIndex((tdex) => tdex.id === todo.id);
+        if (index !== -1) {
+            // todos.value[index] = updatedTodo;
+            todos.value.splice(index, 1); // Remove from Not Done
+            doneTodos.value.unshift(updatedTodo); // Add to Done at the beginning
+        }
+        await fetchTodos()
+        console.log('Marked as done:', updatedItem);
+    } catch (error) {
+        console.error('Failed to mark item as done:', error);
+    }
+}
 
-// const notDoneTodos = () => todos.value.filter(todo => !todo.isDone);
-// DoneTodos = () => todos.value.filter(todo => todo.isDone);
+const TrueOrFalse = (todos: TodoItem[]) => {
+    const doneItem = todos.filter((todo) => todo.isdone === true)
+    const notDoneItem = todos.filter((todo) => todo.isdone === false)
+    return { notDoneItem, doneItem }
+}
+
 
 onMounted(fetchTodos);  //= onMounted(() => { fetchTodos() });
 
@@ -114,39 +144,43 @@ onMounted(fetchTodos);  //= onMounted(() => { fetchTodos() });
     <div class="mainBody">
         <div class="listForm">
             <h1>To Do List</h1>
-            <div class="output">
+            <div class="input">
                 <input v-model="newTodo" type="text" placeholder="Enter a new todo" />
                 <input v-model="newPrice" type="int" placeholder="Enter a new price" />
                 <button @click="addTodo">ADD</button>
+            </div>
+            <div v-if="editingTodo">Edit Todo
+                <input v-model="editingTodo.item" type="text" />
+                <input v-model="editingTodo.price" type="number" />
+                <button @click="updateTodo(editingTodo.id, editingTodo.item,
+                    editingTodo.price, editingTodo.isdone)">Update</button>
+                <button @click="cancelEdit">Cancel</button>
+            </div>
 
-                <ul>
-                    <!-- strike through the item if it's done -->
-                    <li v-for="todo in todos" :key="todo.id">
-                        <!-- :style="{ textDecoration: list.isDone ? 'line-through' }" -->
-                        。 {{ todo.item }} - ${{ todo.price }}
+            <ul>
+                <!-- strike through the item if it's done -->
+                <li class="todoitems" v-for="todo in todos" :key="todo.id">
+                    <span class="todolist">。 {{ todo.item }} - ${{ todo.price }}</span>
+                    <span class="buttons">
                         <button class="updateBN" @click="editTodo(todo)">Edit</button>
                         <button class="isdoneBN" @click="isDoneItem(todo)">Done</button>
                         <button class="deleteBN" @click="deleteTodo(todo.id)">Del</button>
-
-
-                    </li>
-                </ul>
-                <div v-if="editingTodo">
-                    <h3>Edit Todo</h3>
-                    <input v-model="editingTodo.item" type="text" />
-                    <input v-model="editingTodo.price" type="number" />
-                    <button @click="updateTodo(editingTodo.id, editingTodo.item,
-                    editingTodo.price, editingTodo.isdone)">Update</button>
-                    <button @click="cancelEdit">Cancel</button>
-                </div>
-
-                <h3>Done</h3>
-                <li v-for="todo in doneTodos" :key="todo.id">
-                    。 {{ todo.item }} - ${{ todo.price }}
-                    <button class="deleteBN" @click="deleteTodo(todo.id)">Del</button>
-                    <!-- <button class="isdoneBN" @click="isDoneItem(todo)">Done</button> -->
+                    </span>
                 </li>
-            </div>
+                <li class="todoitems" v-for="todo in doneTodos" :key="todo.id"
+                    :style="{ textDecoration: todo.isdone ? 'line-through' : 'none' }">
+                    <span class="todolist">。 {{ todo.item }} - ${{ todo.price }}</span>
+                    <span class="buttons">
+                        <button class="updateBN" @click="editTodo(todo)">Edit</button>
+                        <button class="isdoneBN" @click="isDoneItem(todo)">Done</button>
+                        <button class="deleteBN" @click="deleteTodo(todo.id)">Del</button>
+                    </span>
+                </li>
+            </ul>
+
+
+
+
         </div>
     </div>
 </template>
@@ -181,44 +215,27 @@ h1 {
 }
 
 button {
-    background-color: #9162A6;
-    color: aliceblue;
     border: 0;
-    width: 100px;
+    width: 60px;
     height: 30px;
     border-radius: 50%;
+    height: 30px;
+    margin-left: 10px;
+    /* border-bottom-style: dashed; */
+    background-color: #9162A6;
 }
 
 .deleteBN {
     background-color: #699B9F;
-    border: 0;
-    width: 60px;
-    height: 30px;
-    margin-left: 10px;
-    border-radius: 50%;
-}
-
-.updateBN {
-    background-color: #F3AE3F;
-    border: 0;
-    width: 60px;
-    height: 30px;
-    margin-left: 10px;
-    border-radius: 50%;
 }
 
 .isdoneBN {
     background-color: #69900F;
-    border: 0;
-    width: 60px;
-    height: 30px;
-    margin-left: 10px;
-    border-radius: 50%;
 }
 
-/* .strikethrough {
-    text-decoration: line-through;
-} */
+.updateBN {
+    background-color: #F3AE3F;
+}
 
 @media screen and (max-width: 700px) {
     .mainBody {
@@ -242,9 +259,28 @@ button {
     width: 50%;
 }
 
+.input {
+    text-align: center;
+
+}
 
 ul {
     list-style: none;
+}
+
+.todoitems {
+    margin: 20px;
+}
+
+.todolist {
     /* border-bottom-style: dotted; */
+    /* display: inline-block; */
+    margin-left: 15%;
+}
+
+.buttons {
+    /* border-style: dotted; */
+    float: right;
+    margin-right: 15%;
 }
 </style>

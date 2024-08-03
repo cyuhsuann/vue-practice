@@ -11,8 +11,13 @@ dependencies = [
     "sqlmodel>=0.0.16",
     "psycopg2-binary>=2.9.9",
     "python-dotenv>=1.0.1",
+    "alembic>=1.13.2",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "MIT"}
 
+[tool.pdm.scripts]
+migrate = {cmd = "alembic upgrade head"}
+start-api = {cmd = "uvicorn todo_api:app --host 0.0.0.0 --port 8080"}
+app-start = {composite = ["migrate", "start-api"]}

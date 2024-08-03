@@ -1,0 +1,49 @@
+services:
+  vue:
+    image: my-vue-app
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    command: yarn run dev --host 0.0.0.0
+    ports: 
+      - "5175:5173"
+
+
+  fastapi_api:
+    image: my-fastapi-tool
+    build:
+      context: .
+      dockerfile: ./docker/dockerfile.backend
+    command: pdm app-start
+    ports: 
+      - "8000:8080"
+    depends_on:
+      - db 
+    environment:
+      DB_USER: changxuan
+      DB_PASSWORD: changxuan
+      DB_DATABASE: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      
+
+
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128m
+    ports:
+      - 5431:5432
+    environment:
+      POSTGRES_USER: changxuan
+      POSTGRES_PASSWORD: changxuan
+      POSTGRES_DB: postgres
+  
+
+## -- these two lines can connect to the 'todo_db_docker' --
+## docker exec -it postgres-docker bash 
+
+
+
+## docker run --name postgres-docker -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
+

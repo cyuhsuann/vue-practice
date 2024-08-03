@@ -5,33 +5,13 @@ type TodoItem = {
     isdone: boolean;
 }
 
-// this is call: in middleware wraps `api calls`(CRUD) with DTOs
-// to check the backend `api.py` variable and use a function to make them equal 
-type ApiUpdateToDoItem = {
-    message: {
-        todo_id: string 
-        item_message: string
-        value_cents: number
-        is_done: boolean
-    }
-}
-
-function fromApiUpdateFormat(item: ApiUpdateToDoItem): TodoItem{
-    console.log(item)
-    const msg = item.message
-    return {
-        id: Number(msg.todo_id),
-        item: msg.item_message,
-        price: msg.value_cents / 100,
-        isdone: msg.is_done
-    }
-}
-
 //to make sure it would send a list, not an object
 type ApiResponse<T> = {
     message: T
 }
 
+// this is call: in middleware wraps `api calls`(CRUD) with DTOs
+// to check the backend `api.py` variable and use a function to make them equal 
 type ApiTodoItem = {
     id?: number
     item: string
@@ -56,7 +36,6 @@ function toTodoApi(data: TodoItem): ApiTodoItem{
         is_done: data.isdone
     }
 }
-
 
 
 const apiUrl = 'http://localhost:8000'
@@ -84,17 +63,18 @@ export async function fetchData(): Promise<TodoItem[]> {
     return data.message.map((item) => fromTodoApi(item));
 }
 
-export async function postData(data: TodoItem): Promise<TodoItem[]> {
+export async function postData(data: TodoItem): Promise<TodoItem> {
     logRequest('POST')
     const response = await fetch(`${apiUrl}/todolist`, {
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
-        body: JSON.stringify(data)
+        body: JSON.stringify(toTodoApi(data))
+
     });
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
-    const responseData: ApiResponse<TodoItem[]> = await response.json()
+    const responseData: ApiResponse<TodoItem> = await response.json()
     console.log('Fetched todos:', responseData);
     return responseData.message;
 }
@@ -117,14 +97,14 @@ export async function updateData(id: number, data: TodoItem): Promise<TodoItem> 
     const response = await fetch(`${apiUrl}/todolist/${id}`, {
         headers: { 'Content-Type': 'application/json' },
         method: 'PUT',
-        body: JSON.stringify(data)
+        body: JSON.stringify(toTodoApi(data))
     });
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
-    // improtant lesson: check the `api.py` and here
-    const responseData: TodoItem = fromApiUpdateFormat(await response.json())
-    console.log('Fetched todos:', responseData)
-    return responseData;
+    // // improtant lesson: check the `api.py` and here
+    const responseData: ApiResponse<ApiTodoItem> = await response.json()
+    console.log('Updated items:', responseData)
+    return fromTodoApi(responseData.message);
 }
 
