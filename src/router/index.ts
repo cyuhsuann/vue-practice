@@ -13,11 +13,11 @@ const router = createRouter({
       name: 'livingroom',
       component: () => import('../pages/Livingroom.vue')
   },
-  {
-      path: '/kitchen',
-      name: 'kitchen',
-      component: () => import('../pages/Kitchen.vue')
-  },
+//   {
+//       path: '/kitchen',
+//       name: 'kitchen',
+//       component: () => import('../pages/Kitchen.vue')
+//   },
   {
       path: '/todolist',
       name: 'todolist',

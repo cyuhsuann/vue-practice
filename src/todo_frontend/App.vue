@@ -7,7 +7,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
   <body>
     <nav class="logo">
-      <RouterLink to="/gate"><img src="./assets/空屋 logo-2.png" alt="雲端空屋RENT">
+      <RouterLink to="/gate"><img src="../assets/空屋 logo-2.png" alt="雲端空屋RENT">
       </RouterLink>
     </nav>
     <ul>
@@ -20,10 +20,10 @@ import { RouterLink, RouterView } from 'vue-router'
           livingroom | 客廳
         </RouterLink>
       </li>
-      <li>
+      <!-- <li>
         <RouterLink style="text-decoration: none; color: inherit;" to="/kitchen">
           Kitchen | 廚房</RouterLink>
-      </li>
+      </li> -->
       <li>
         <RouterLink style="text-decoration: none; color: inherit;" to="/todolist">
           ToDoList | 清單</RouterLink>

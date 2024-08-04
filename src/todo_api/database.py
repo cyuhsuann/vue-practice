@@ -54,7 +54,6 @@ class DBConn:
         cls.is_initialised = True
 
 
-## TODO: why do I use 'engine' for???
 def setup_database():
     # Set up the database URL
     DBConn.load_envs()
