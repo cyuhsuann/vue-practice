@@ -16,5 +16,5 @@ RUN yarn install
 
 ####
 # docker build -t my-vue-app .
-# docker run -it my-vue-app ----> ' npm run dev -- --host '
+# npm run dev -- --host  ( --> docker run -it my-vue-app)
 ####

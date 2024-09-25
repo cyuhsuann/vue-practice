@@ -14,7 +14,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/dockerfile.backend
-    command: pdm app-start
+    command: pdm app-start  ## TODO: do I need "pdm run"???
     ports: 
       - "8000:8080"
     depends_on:
@@ -25,7 +25,9 @@ services:
       DB_DATABASE: postgres
       DB_HOST: db
       DB_PORT: 5432
-      
+      # USE_DOTENV: "True" ## TODO: do I need this line???
+## docker compose build fastapi_api 
+## COMMAND LINE for just run fastapi: docker compose run fastapi_api /bin/bash
 
 
   db:
@@ -38,12 +40,3 @@ services:
       POSTGRES_USER: changxuan
       POSTGRES_PASSWORD: changxuan
       POSTGRES_DB: postgres
-  
-
-## -- these two lines can connect to the 'todo_db_docker' --
-## docker exec -it postgres-docker bash 
-
-
-
-## docker run --name postgres-docker -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
-

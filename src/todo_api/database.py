@@ -1,13 +1,11 @@
 import os, typing
-from sqlmodel import Field, SQLModel
+from dotenv import load_dotenv
 
-
-## TODO:
-class TodoList(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    item: str
-    price: int
-    is_done: bool | None = Field(default=None)
+if os.getenv("USE_DOTENV", "False") == "True":
+    load_dotenv(".env")
+    ## echo $USE_DOTENV
+    ## ## $USE_DOTENV=True
+    ## TODO: does there have other methods to check True or False?
 
 
 class DBConn:
@@ -18,6 +16,8 @@ class DBConn:
     db_port: typing.Optional[int] = None
 
     is_initialised = False
+    ## the necessary environment variables (like database username, password ...)
+    # have not been loaded.
 
     @classmethod
     def build_address(cls):
@@ -52,10 +52,9 @@ class DBConn:
             raise ValueError(f"DB connection env vars missing:\n{msg}")
 
         cls.is_initialised = True
+        ## After the environment variables are successfully loaded by the load_envs method,
+        # it is set to True. The class now has all the info it needs to proceed, and it is
+        # safe to generate the database connection string.
 
 
-def setup_database():
-    # Set up the database URL
-    DBConn.load_envs()
-    # Build the database URL
-    return DBConn.build_address()
+DBConn.load_envs()

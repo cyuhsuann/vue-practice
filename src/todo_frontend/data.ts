@@ -58,7 +58,7 @@ export async function fetchData(): Promise<TodoItem[]> {
     // // connect to `api.py` GET
     // // response.json() returns a promise resolved to a JSON object
     const data: ApiResponse<ApiTodoItem[]> = await response.json()
-    console.log('******', data)
+    console.log('Fetched Items:', data)
     // // from [a ApiTodoItem list of obect] to {an TodoItem Object}
     return data.message.map((item) => fromTodoApi(item));
 }
@@ -75,7 +75,7 @@ export async function postData(data: TodoItem): Promise<TodoItem> {
         throw new Error('Network response was not ok');
     }
     const responseData: ApiResponse<TodoItem> = await response.json()
-    console.log('Fetched todos:', responseData);
+    console.log('Posted Item:', responseData);
     return responseData.message;
 }
 
@@ -88,7 +88,8 @@ export async function deleteData(id: number): Promise<void> {
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
-    console.log('Item deleted');
+    const responseData: ApiResponse<ApiTodoItem> = await response.json()
+    console.log('Deleted Item:', responseData);
     return;
 }
 
@@ -104,7 +105,7 @@ export async function updateData(id: number, data: TodoItem): Promise<TodoItem> 
     }
     // // improtant lesson: check the `api.py` and here
     const responseData: ApiResponse<ApiTodoItem> = await response.json()
-    console.log('Updated items:', responseData)
+    console.log('Updated item:', responseData)
     return fromTodoApi(responseData.message);
 }
 

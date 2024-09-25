@@ -20,4 +20,5 @@ license = {text = "MIT"}
 [tool.pdm.scripts]
 migrate = {cmd = "alembic upgrade head"}
 start-api = {cmd = "uvicorn todo_api:app --host 0.0.0.0 --port 8080"}
-app-start = {composite = ["migrate", "start-api"]}
+start-api-2 = {call = "todo_api.run:main"}
+app-start = {composite = ["migrate", "start-api-2"]}

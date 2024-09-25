@@ -36,7 +36,7 @@ const fetchTodos = async () => {
         todos.value = sortTodos.notDoneItem as TodoItem[];
         doneTodos.value = sortTodos.doneItem as TodoItem[];
         // console.log('FROM VUE GET', todos.value, doneTodos.value)
-        console.log('Fetched todos:', data);  // chack the data thast we have gotten
+        console.log('Fetched todos:', data);  // chack the data that we have gotten
     } else {
         console.error('Failed to fetch todos:', error);
     }
@@ -53,10 +53,15 @@ const addTodo = async () => {
         }
         const newTodoItem = await postData(newItem);
         todos.value.push(newItem)
-        // //
+        console.log('*******', newTodoItem)
+        // // this one goes to api list and with id
+        // EX: {id: 10, is_done: false, item: 'zzz', price: 2222}
+        
         sortTodos();
         await fetchTodos()
         console.log('Added new todo:', newItem)
+        // // this one goes to js list
+        // EX: {item: 'zzz', price: '2222', isdone: false}
     } catch (error) {
         console.error('Failed to add new todo:', error)
     }
@@ -92,7 +97,7 @@ const updateTodo = async (
 
         editingTodo.value = null;  // Reset editing state
         // await fetchTodos()
-        console.log('Updated todo:', updatedTodo, todos.valueo);
+        console.log('Updated todo:', updatedTodo, todos.value);
 
     } catch (error) {
         console.error('Failed to update new todo:', error)

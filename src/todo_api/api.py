@@ -1,23 +1,31 @@
-from fastapi import FastAPI, HTTPException, Depends
-from sqlmodel import Session, select
+from fastapi import HTTPException, Depends
+from sqlmodel import select, Session, create_engine
+from .database import DBConn
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import List, TypeVar
-from .database import TodoList
-from .app import engine
-
-
-class MessageToDoList(BaseModel):
-    ## Typescript for GET
-    message: List[TodoList]
-
-
-class MessageToDoItem(BaseModel):
-    ## Typescript for POST, DELETE, PUT
-    message: TodoList
+from .models import TodoList, MessageToDoItem, MessageToDoList
 
 
 app = FastAPI()
+
+
+## it is not necessary but it is useful for debugging and monitoring
+@app.middleware("http")
+async def log_middleware(request: Request, call_next):
+    ## log request info
+    # EX: Request: GET http://localhost:8000/todolist
+    # EX: Request: PUT http://localhost:8000/todolist/2
+    print(f"Request: {request.method} {request.url}")
+
+    ## pass the request to the next middleware or route handler
+    response = await call_next(request)
+
+    # log response info
+    # EX: Response: 200
+    print(f"Response: {response.status_code}")
+
+    return response
+
 
 ## DEVNOTE: the backend need to have a list of 'allowed origins' to let the
 # frondend send its request
@@ -32,36 +40,33 @@ app.add_middleware(
 )
 
 
-## way way important to show in front of browser!
+## to provide or manage database sessions effectively, and avoid repetitive code
+# in each route handler
 def get_session():
+    ## engine: an object that handles the communication with the database
+    engine = create_engine(DBConn.build_address())
     with Session(engine) as session:
         yield session
 
 
+## it is a specific API endpoint func used to retrieve todolist data from the database
 @app.get("/todolist", response_model=MessageToDoList)
 def read_todolists():
     # remember this is the simple way to connect the database, but still can
     # use Depends
+    engine = create_engine(DBConn.build_address())
     with Session(engine) as sess:
         todolists = sess.exec(select(TodoList)).all()
     return {"message": todolists}
 
 
-# # defined in .database, or .todolist or something
-def get_todolist_items():
-    with Session(engine) as sess:
-        todolists = sess.exec(select(TodoList)).all()
-    return todolists
-
-
 @app.post("/todolist", response_model=MessageToDoItem)
 def create_todolist(todolist: TodoList) -> MessageToDoItem:
+    engine = create_engine(DBConn.build_address())
     with Session(engine) as session:
         session.add(todolist)
         session.commit()
         session.refresh(todolist)
-    # print("********", todolist)
-    # print("\n\n\n\n\n")
     return MessageToDoItem(message=todolist)
 
 
@@ -90,7 +95,7 @@ def update_todoList(
     todo_item.is_done = todo_update.is_done
 
     session.add(todo_item)
-    session.commit()
+    session.commit()  ## Commits the changes, making them permanent in the database.
     session.refresh(todo_item)
 
     return MessageToDoItem(message=todo_item)
