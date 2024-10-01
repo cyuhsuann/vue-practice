@@ -1,35 +1,13 @@
-# vue-experiment
+# vue-practice
 
-This template should help get you started developing with Vue 3 in Vite.
+This project includes the following features:
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-yarn
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-yarn dev
-```
-
-### Compile and Minify for Production
-
-```sh
-yarn build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-yarn lint
-```
+- Frontend and Backend Integration: The project uses Vue.js for the frontend and FastAPI for the backend to connect the client and server seamlessly.
+  
+- To-Do List Application: A functional To-Do List that stores data using a PostgreSQL database.
+  
+- Photo Gallery: A photo gallery that is styled and organised using Bootstrap for a clean and concise layout.
+  
+- Typescript Support: Implemented Typescript for type safety, redusing potential runtime errors and improving code quality.
+  
+- Containerisation with Docker: The project utilises Docker and Docker Compose to efficiently manage and run multiple containers.
